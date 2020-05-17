@@ -1,4 +1,3 @@
-# Code starts at line 110
 
 from random import randint
 
@@ -22,9 +21,17 @@ def gen_bombs():
             ctr += 1
         if(ctr == NO_OF_BOMBS):
             break
-        
 
-
+def intro():
+    st = "Welcome to Minesweeper game"
+    ste = st.center(FULL_LINE, "-")
+    print(ste)
+    print("'.' indicate unexplored coordinates")
+    print("'F' would appear over a cell if you decide to flag it")
+    print("The game ends if you find a bomb")
+    print("Try to get around all the cells without activating a bomb")
+    print("Good Luck!")
+    
 
 # Function to print the grid
 def print_grid():
@@ -39,6 +46,16 @@ def print_grid():
             print("  |  " + str(grid[i][j]), end="")
         print("  |")
         k += 1
+        
+
+# This function is called when the used activates a bomb, all of the bombs are printed and the game is declared to be over
+def show_bombs(grid, board):
+    for i in range(len(grid)):
+        for j in range(len(grid)):
+            if (grid[i][j] == '*' and board[i][j] != 'F'):
+                board[i][j] = '*'
+    print_board()
+
 
 # Function to print the board that is visible to the user
 def print_board():
@@ -65,6 +82,7 @@ def print_board():
     print()
 
 
+
 # function to calculate the number of bombs in the vicinity of the given cell whose coordianates (row, col) are passed
 def check_count(row, col): 
     count = 0
@@ -80,6 +98,8 @@ def check_count(row, col):
         r += 1
     return (count) # The number of bombs are returned
 
+
+
 # This function iterates over every cell in the 2D list 'grid' and calculates the number of bombs near it
 def get_index():
     for i in range(ROW):
@@ -87,7 +107,9 @@ def get_index():
             if (grid[i][j] != '*'):
                 grid[i][j] = str(check_count(i,j))
 
-            
+
+
+
 # Recursive function, to print the value at user's input
 def open_grid(row, col):
     board[row][col] = grid[row][col]
@@ -110,16 +132,27 @@ def open_grid(row, col):
 gen_bombs()
 get_index()
 print_grid() # This is just for beta testing, so that we know where the bombs are
+intro()
 print_board()
 
+
+chances = 0
+
 while True:
+    chances += 1
+    f = input("Do you want to flag? (y/n) ")
     row = int(input("Enter the row coordinate: "))
     col = int(input("Enter the col coordinate: "))
-    open_grid(row,col)
+    if (f == 'y'):
+        board[row][col] = 'F'
+    else:
+        open_grid(row,col)
+        if (grid[row][col] == '*'):
+            show_bombs(grid, board) # Have to change is so as to print only the bombs
+            print("Bomb Found")
+            print("Game Over")
+            print("Chances: ", chances)
+            break
     print_board()
 
-    if (grid[row][col] == '*'):
-        print_grid() # Have to change is so as to print only the bombs
-        print("Bomb Found")
-        print("Game Over")
-        break
+    

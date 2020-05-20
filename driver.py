@@ -22,6 +22,7 @@ def gen_bombs():
         if(ctr == NO_OF_BOMBS):
             break
 
+# Function to give the introduction message
 def intro():
     st = "Welcome to Minesweeper game"
     ste = st.center(FULL_LINE, "-")
@@ -55,6 +56,30 @@ def show_bombs(grid, board):
             if (grid[i][j] == '*' and board[i][j] != 'F'):
                 board[i][j] = '*'
     print_board()
+
+
+# The game ends if the user selects a cell which is a bomb OR when all if the non bomb cells are open
+def end_game(row, col):
+    if (grid[row][col] == '*' and board[row][col] != 'F'):
+        show_bombs(grid, board) 
+        print("Bomb Found")
+        print("Game Over")
+        print("Chances: ", chances)
+        return True
+
+    count = 0
+    for i in board:
+        count += i.count('.') 
+        count += i.count('F')
+    print(count)
+    if (count == NO_OF_BOMBS):
+        print("You Won")
+        print("Game Over")
+        print("Chances: ", chances)
+        return True
+
+    
+
 
 
 # Function to print the board that is visible to the user
@@ -140,19 +165,44 @@ chances = 0
 
 while True:
     chances += 1
-    f = input("Do you want to flag? (y/n) ")
     row = int(input("Enter the row coordinate: "))
     col = int(input("Enter the col coordinate: "))
-    if (f == 'y'):
-        board[row][col] = 'F'
-    else:
-        open_grid(row,col)
-        if (grid[row][col] == '*'):
-            show_bombs(grid, board) # Have to change is so as to print only the bombs
-            print("Bomb Found")
-            print("Game Over")
-            print("Chances: ", chances)
-            break
-    print_board()
+    
+    if (board[row][col].isdigit()): # checks if input already given
+        print("Oops.. Looks like cell is already open. Enter new coordinates")
+        continue
+    
+    if (board[row][col] == "F"): # checks if input cell is a flag, and asks the used if they want to unflag it
+        uf = input("Do you want to unflag or open? (uf/o) ")
+        if (uf == 'uf'): # replaces the 'F' with a '.'
+            board[row][col] = '.'
+            print_board()
+            continue
+
+        elif (uf == 'o'):
+            open_grid(row,col) # opens the grid
+            if (end_game(row,col)):
+                break
+            print_board()
+            continue
+        
+        else:
+            chances -= 1 # kind of error handling, I admit it isn't done in a good way :|
+            print("Invalid choice")
+            continue
 
     
+    f = input("Do you want to flag or open the cell? (f/o) ")
+    
+    if (f == 'f'):
+        board[row][col] = 'F'
+    elif(f == 'o'):
+        open_grid(row,col)
+    else:
+        chances -= 1
+        print("Invalid choice")
+        continue
+
+    if (end_game(row,col)):
+        break
+    print_board()

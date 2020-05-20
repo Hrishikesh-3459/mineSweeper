@@ -85,7 +85,7 @@ def intro():
 # This function is called when the used activates a bomb, all of the bombs are printed and the game is declared to be over
 def show_bombs(grid, board):
     for i in range(len(grid)):
-        for j in range(len(grid)):
+        for j in range(len(grid[i])):
             if (grid[i][j] == '*' and board[i][j] != 'F'):
                 board[i][j] = '*'
     print_board()

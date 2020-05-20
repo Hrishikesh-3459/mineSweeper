@@ -1,25 +1,32 @@
 
 from random import randint
 
-ROW = 10 # Defining the number of rows for a beginner level
-COL = 10 # Defining the number of columns for a beginner level
-NO_OF_BOMBS = 10 # Defining the number of bombs for a beginner level
-FULL_LINE = 190 # Constant for design purposes
+ROW = {1: 10, 2: 17, 3:17} # Defining the number of rows for a beginner level
+COL = {1: 10, 2: 17, 3: 31} # Defining the number of columns for a beginner level
+NO_OF_BOMBS = {1: 10, 2: 40, 3: 99} # Defining the number of bombs for a beginner level
+FULL_LINE = 200 # Constant for design purposes
+BORDER = {1: 67, 2: 110, 3: 194} 
+while True:
+    difficulty = int(input("Choose difficulty: \n1: Easy \n2: Medium \n3: Hard\nEnter Your Choice: "))
+    if (difficulty in [1,2,3]):
+        break
+    else:
+        print("Invalid choice")
 
-grid = [['0'] * COL for j in range(ROW)] # Creating a grid 
-board = [["."] * COL for j in range(ROW)] # Creating a board, that the user will see
+grid = [['0'] * COL[difficulty] for j in range(ROW[difficulty])] # Creating a grid 
+board = [["."] * COL[difficulty] for j in range(ROW[difficulty])] # Creating a board, that the user will see
 
 
 # Function to generate bombs at random locations in the grid
 def gen_bombs():
     ctr = 0
     while True:
-        row = randint(0, ROW-1)
-        col = randint(0, COL-1)
+        row = randint(0, ROW[difficulty]-1)
+        col = randint(0, COL[difficulty]-1)
         if (grid[row][col] != '*'):
             grid[row][col] = '*' # '*' Indicates a bomb in the grid
             ctr += 1
-        if(ctr == NO_OF_BOMBS):
+        if(ctr == NO_OF_BOMBS[difficulty]):
             break
 
 # Function to give the introduction message
@@ -30,23 +37,49 @@ def intro():
     print("'.' indicate unexplored coordinates")
     print("'F' would appear over a cell if you decide to flag it")
     print("The game ends if you find a bomb")
+    print("Number of bombs = ",NO_OF_BOMBS[difficulty])
     print("Try to get around all the cells without activating a bomb")
     print("Good Luck!")
     
 
 # Function to print the grid
-def print_grid():
-    POS_INDICATOR = 10
-    for i in range(POS_INDICATOR):
-        print("   |", i, end="")
-    print("   |")
-    k = 0
-    for i in range(ROW):
-        print(k, end="")
-        for j in range(COL):
-            print("  |  " + str(grid[i][j]), end="")
-        print("  |")
-        k += 1
+# def print_grid():
+#     POS_INDICATOR = ROW[difficulty]
+
+#     for i in range(FULL_LINE):
+#         print("-", end="")
+#     print()
+
+#     for i in range(BORDER[difficulty]):
+#         print("_", end="")
+#     print()
+#     space = "      "
+#     k = 0
+#     print(space, end = "")
+#     for i in range(POS_INDICATOR):
+#         print('|' + str(i).center(5), end="")
+#     print("|")
+
+#     for i in range(ROW[difficulty]):
+#         if (i < 10):
+#             space = "  "
+#         else:
+#             space = " "
+#         print(k , space, end="")
+#         for j in range(COL[difficulty]):
+#             print("  |  " + str(grid[i][j]), end="")
+#         print("  |")
+#         k += 1
+
+#     for i in range(BORDER[difficulty]):
+#         print("_", end="")
+#     print()
+#     bom_count = 0
+#     for i in grid:
+#         for j in i:
+#             if (j == '*'):
+#                 bom_count += 1
+#     print("Number of bombs = ",bom_count)
         
 
 # This function is called when the used activates a bomb, all of the bombs are printed and the game is declared to be over
@@ -72,7 +105,7 @@ def end_game(row, col):
         count += i.count('.') 
         count += i.count('F')
     print(count)
-    if (count == NO_OF_BOMBS):
+    if (count == NO_OF_BOMBS[difficulty]):
         print("You Won")
         print("Game Over")
         print("Chances: ", chances)
@@ -84,27 +117,41 @@ def end_game(row, col):
 
 # Function to print the board that is visible to the user
 def print_board():
-    BORDER = 64
-    POS_INDICATOR = 10
+    
+    POS_INDICATOR = ROW[difficulty]
+    if (difficulty == 3):
+        POS_INDICATOR = 31
+
     for i in range(FULL_LINE):
         print("-", end="")
     print()
-    for i in range(BORDER):
+
+    for i in range(BORDER[difficulty]):
         print("_", end="")
     print()
+    space = "      "
     k = 0
+    print(space, end = "")
     for i in range(POS_INDICATOR):
-        print("   |", i, end="")
-    print("   |")
-    for i in range(ROW):
-        print(k, end="")
-        for j in range(COL):
+        print('|' + str(i).center(5), end="")
+    print("|")
+
+    for i in range(ROW[difficulty]):
+        if (i < 10):
+            space = "  "
+        else:
+            space = " "
+        print(k , space, end="")
+        for j in range(COL[difficulty]):
             print("  |  " + str(board[i][j]), end="")
         print("  |")
         k += 1
-    for i in range(BORDER):
+
+    for i in range(BORDER[difficulty]):
         print("_", end="")
     print()
+
+
 
 
 
@@ -115,7 +162,7 @@ def check_count(row, col):
     while(r < 2): 
         c = -1 # Column constant, to iterate around a given cell
         while(c < 2): 
-            if (row + r not in range(0,ROW) or col + c not in range(0,COL)): # Skips over boundry cases
+            if (row + r not in range(0,ROW[difficulty]) or col + c not in range(0,COL[difficulty])): # Skips over boundry cases
                 pass
             elif (grid[row + r][col + c] == '*'): # counts the number if bombs around the given cell
                 count += 1
@@ -127,8 +174,8 @@ def check_count(row, col):
 
 # This function iterates over every cell in the 2D list 'grid' and calculates the number of bombs near it
 def get_index():
-    for i in range(ROW):
-        for j in range(COL):
+    for i in range(ROW[difficulty]):
+        for j in range(COL[difficulty]):
             if (grid[i][j] != '*'):
                 grid[i][j] = str(check_count(i,j))
 
@@ -143,7 +190,7 @@ def open_grid(row, col):
         while(r < 2):  
             c = -1
             while(c < 2):
-                if (row + r not in range(0,ROW) or col + c not in range(0,COL)):
+                if (row + r not in range(0,ROW[difficulty]) or col + c not in range(0,COL[difficulty])):
                     pass
                 elif (board[row+r][col+c] == '.'):
                     if (grid[row + r][col + c] == '0'):
@@ -154,9 +201,10 @@ def open_grid(row, col):
 
     
 # Calling the functions
+
 gen_bombs()
 get_index()
-print_grid() # This is just for beta testing, so that we know where the bombs are
+# print_grid() # This is just for beta testing, so that we know where the bombs are
 intro()
 print_board()
 

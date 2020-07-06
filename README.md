@@ -34,6 +34,8 @@ General
 
 * **'F'** would appear over a cell if you decide to flag it.
 
+* **' * '** would appear over a cell if there is a bomb at that loaction.
+
 * The game ends if you find a **bomb**.
 
 * Try to get around all the cells **without** activating a bomb.

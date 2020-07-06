@@ -43,6 +43,7 @@ def intro():
     
 
 # Function to print the grid
+
 # def print_grid():
 #     POS_INDICATOR = ROW[difficulty]
 

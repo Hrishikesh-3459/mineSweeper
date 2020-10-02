@@ -132,21 +132,10 @@ class MinesweeperAI():
         """
         Called when the Minesweeper board tells us, for a given
         safe cell, how many neighboring cells have mines in them.
-
-        This function should:
-            1) mark the cell as a move that has been made
-            2) mark the cell as safe
-            3) add a new sentence to the AI's knowledge base
-               based on the value of `cell` and `count`
-            4) mark any additional cells as safe or as mines
-               if it can be concluded based on the AI's knowledge base
-            5) add any new sentences to the AI's knowledge base
-               if they can be inferred from existing knowledge
         """
 
         # Marking the cell as one of the moves made in the game
         self.moves_made.add(cell)
-        # print(f"moves made = {self.moves_made}")
 
         # Marking the cell as a safe cell, and updating any sentences that contain the cell
         self.mark_safe(cell)
@@ -181,9 +170,6 @@ class MinesweeperAI():
         Returns a safe cell to choose on the Minesweeper board.
         The move must be known to be safe, and not already a move
         that has been made.
-
-        This function may use the knowledge in self.mines, self.safes
-        and self.moves_made, but should not modify any of those values.
         """
 
         # Since we have to make safe moves, we can only loop through the safe cells, are return the cells that are not a mine and not a move that has already been made
@@ -196,9 +182,6 @@ class MinesweeperAI():
     def make_random_move(self):
         """
         Returns a move to make on the Minesweeper board.
-        Should choose randomly among cells that:
-            1) have not already been chosen, and
-            2) are not known to be mines
         """
         available = set()
 
